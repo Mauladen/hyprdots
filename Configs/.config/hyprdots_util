@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Перезапуск waybar
+restart_waybar() {
+    pkill waybar
+    waybar &
+    waybar --config ~/.config/waybar/config-bottom.jsonc
+}
+
+# Установка обоев рабочего стола
+set_current_background() {
+    sleep 1
+    swww img ~/.config/backgrounds/wallpaper-dark.jpg
+}
+
+# Переключение клавиатуры при нажатии на язык
+switch_keyboard() {
+    hyprctl switchxkblayout royuan-akko-multi-modes-keyboard-b next
+}
+
+if [[ "$1" == "start" ]]; then
+    set_current_background
+elif [[ "$1" == "swkb" ]]; then
+    switch_keyboard
+elif [[ "$1" == "restwb" ]]; then
+    restart_waybar
+    set_current_background
+fi

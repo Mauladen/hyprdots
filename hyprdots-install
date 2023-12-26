@@ -1,0 +1,282 @@
+#!/bin/bash
+
+prep_stage=(
+    qt5-wayland 
+    qt6-wayland 
+    qt5-svg
+    qt5-quickcontrols2
+    qt5-graphicaleffects
+    polkit-gnome
+    gtk3 
+    jq 
+    wl-clipboard 
+    cliphist 
+    python-requests # для отображения погоды (waybar)
+    pacman-contrib # для отображения обновлений (waybar)
+    pipewire
+    pipewire-alsa
+    pipewire-audio
+    pipewire-jack
+    pipewire-pulse
+    gst-plugin-pipewire
+    wireplumber
+    networkmanager
+    network-manager-applet
+    bluez
+    bluez-utils
+    blueman
+)
+
+install_stage=(
+    dex # для запуска приложений из файлов .desktop
+    xwaylandvideobridge-bin # для нормальной работы показа экрана в Discord
+    zsh
+    kitty 
+    mako 
+    waybar
+    swww 
+    swaylock-effects 
+    wofi 
+    wlogout 
+    xdg-desktop-portal-hyprland 
+    swappy 
+    grim 
+    slurp 
+    btop
+    imagemagick
+    pamixer 
+    pavucontrol  
+    thunar
+    gvfs 
+    thunar-archive-plugin 
+    file-roller
+    starship 
+    ttf-jetbrains-mono 
+    ttf-jetbrains-mono-nerd 
+    noto-fonts-emoji 
+    catppuccin-gtk-theme-mocha
+    tela-circle-icon-theme-dracula
+    bibata-cursor-theme
+    nwg-look-bin # для редактирования тем у приложений GTK
+    kvantum # для редактирования тем у приложений QT
+    sddm
+    firefox
+    telegram-desktop
+    visual-studio-code-bin
+    mattermost-desktop-bin
+    zoom
+    discord
+    betterdiscord-git
+    betterdiscordctl
+    qbittorrent
+    webstorm
+    obsidian
+)
+
+# Установка цвета для лейблов
+CNT="[\e[1;36mПРИМЕЧАНИЕ\e[0m]"
+COK="[\e[1;32mУСПЕШНО\e[0m]"
+CER="[\e[1;31mОШИБКА\e[0m]"
+CAT="[\e[1;37mВНИМАНИЕ\e[0m]"
+CWR="[\e[1;35mПРЕДУПРЕЖДЕНИЕ\e[0m]"
+CAC="[\e[1;33mВОПРОС\e[0m]"
+INSTLOG="install.log"
+
+### Функции ###
+
+# Функция, которая показывает индикатор выполнения
+show_progress() {
+    while ps | grep $1 &> /dev/null;
+    do
+        echo -n "."
+        sleep 2
+    done
+    echo -en "Успешно!\n"
+    sleep 2
+}
+
+# Функция, которая будет проверять наличие пакета, если его нет, установит его
+install_software() {
+    # First lets see if the package is there
+    if yay -Q $1 &>> /dev/null ; then
+        echo -e "$COK - $1 is already installed."
+    else
+        # no package found so installing
+        echo -en "$CNT - Now installing $1 ."
+        yay -S --noconfirm $1 &>> $INSTLOG &
+        show_progress $!
+        # test to make sure package installed
+        if yay -Q $1 &>> /dev/null ; then
+            echo -e "\e[1A\e[K$COK - $1 was installed."
+        else
+            # if this is hit then a package is missing, exit to review log
+            echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
+            exit
+        fi
+    fi
+}
+
+# Очистка экрана
+clear
+
+# Сообщаем пользователю, что мы будем использовать sudo
+echo -e "$CNT - Этот скрипт запустит некоторые команды, требующие sudo. Вам будет предложено ввести пароль."
+sleep 1
+
+# Подтверждаем начало установки
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите ли вы продолжить установку (Да[Y], Нет[N]) ' CONTINST
+if [[ $CONTINST =~ ^[Yy]$ ]]; then
+    echo -e "$CNT - Начало настройки..."
+    sudo touch /tmp/hyprv.tmp
+else
+    echo -e "$CNT - Скрипт завершён, никаких изменений в системе не произошло."
+    exit
+fi
+
+#### Проверка наличия менеджера пакетов ####
+if [ ! -f /sbin/yay ]; then  
+    echo -en "$CNT - Настройка yay."
+    git clone https://aur.archlinux.org/yay.git &>> $INSTLOG
+    cd yay
+    makepkg -si --noconfirm &>> ../$INSTLOG &
+    show_progress $!
+    if [ -f /sbin/yay ]; then
+        echo -e "\e[1A\e[K$COK - yay настроен."
+        cd ..
+        
+        # update the yay database
+        echo -en "$CNT - Обновление yay."
+        yay -Suy --noconfirm &>> $INSTLOG &
+        show_progress $!
+        echo -e "\e[1A\e[K$COK - yay обновлён."
+    else
+        # if this is hit then a package is missing, exit to review log
+        echo -e "\e[1A\e[K$CER - ошибка установки yay, пожалуйста посмотрите install.log"
+        exit
+    fi
+fi
+
+### Установка всех вышеупомянутых пакетов ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите ли вы установить пакеты? (Да[Y], Нет[N]) ' INST
+if [[ $INST =~ ^[Yy]$ ]]; then
+
+    # Подготовительный этап - Установка необходимых компонентов
+    echo -e "$CNT - Подготовительный этап - Установка необходимых компонентов, это может занять некоторое время..."
+    for SOFTWR in ${prep_stage[@]}; do
+        install_software $SOFTWR 
+    done
+
+    # Установка hyprland
+    echo -e "$CNT - Установка Hyprland, это может занять некоторое время..."
+    install_software hyprland
+
+    # Этап 1 - основные компоненты
+    echo -e "$CNT - Установка основных компонентов, это может занять некоторое время..."
+    for SOFTWR in ${install_stage[@]}; do
+        install_software $SOFTWR 
+    done
+
+    # Запуск службы NetworkManager
+    echo -e "$CNT - Запуск службы NetworkManager..."
+    sudo systemctl enable --now NetworkManager.service &>> $INSTLOG
+    sleep 2
+
+    # Запуск службы Bluetooth
+    echo -e "$CNT - Запуск службы Bluetooth..."
+    sudo systemctl enable --now bluetooth.service &>> $INSTLOG
+    sleep 2
+
+    # Включение службы менеджера входа sddm
+    echo -e "$CNT - Запуск службы SDDM..."
+    sudo systemctl enable sddm &>> $INSTLOG
+    sleep 2
+    
+    # Очистка других порталов
+    echo -e "$CNT - Очистка конфликтующих порталов xdg..."
+    yay -R --noconfirm xdg-desktop-portal-gnome xdg-desktop-portal-gtk &>> $INSTLOG
+fi
+
+### Установка Oh-My-Zsh ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите установить Oh-My-Zsh? (Да[Y], Нет[N]) ' OMZ
+if [[ $OMZ =~ ^[Yy]$ ]]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+### Копирование файлов конфигурации ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите ли вы скопировать файлы конфигурации? (Да[Y], Нет[N]) ' CFG
+if [[ $CFG =~ ^[Yy]$ ]]; then
+    # Проверка наличия существующих папок конфигурации и резервное копирование в случае если они есть 
+    for DIR in hypr kitty mako swaylock waybar wlogout wofi 
+    do 
+        DIRPATH=~/.config/$DIR
+        if [ -d "$DIRPATH" ]; then 
+            echo -e "$CAT - Найдена конфигурация в $DIR, выполняется резервное копирование."
+            mv $DIRPATH $DIRPATH-back &>> $INSTLOG
+            echo -e "$COK - Конфигурация и $DIR сохранена в $DIRPATH-back."
+        fi
+
+        # Создание новых пустых папок
+        mkdir -p $DIRPATH &>> $INSTLOG
+    done
+
+    # Копирование файлов конфигурации
+    echo -e "$CNT - Копирование файлов конфигурации..."
+    cp -a -T Configs ~/
+
+    # Копирование темы SDDM
+    echo -e "$CNT - Настройка экрана входа в систему."
+    sudo cp -R Source/sdt /usr/share/sddm/themes/
+    sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
+    sudo mkdir -p /etc/sddm.conf.d
+    echo -e "[Theme]\nCurrent=sdt" | sudo tee -a /etc/sddm.conf.d/10-theme.conf &>> $INSTLOG
+    WLDIR=/usr/share/wayland-sessions
+    if [ ! -d "$WLDIR" ]; then
+        echo -e "$CWR - $WLDIR не найден, создание..."
+        sudo mkdir $WLDIR
+    else
+        echo -e "$COK - $WLDIR найден"
+    fi 
+    
+    # Копирование файла hyprland.desktop
+    sudo cp Source/hyprland.desktop /usr/share/wayland-sessions/
+
+    # Копирование фона SSDM
+    cp -f ~/.config/backgrounds/wallpaper-dark.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
+fi
+
+### Установка Starship ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите активировать оболочку starship? (Да[Y], Нет[N]) ' STAR
+if [[ $STAR =~ ^[Yy]$ ]]; then
+    # install the starship shell
+    echo -e "$CNT - 1..2..3, Поехали!"
+    echo -e "$CNT - копирование файла конфигурации starship в ~/.config ..."
+    cp Source/starship.toml ~/.config/
+fi
+
+### Установка для плагинов Oh-My-Zsh ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите установить плагины для Oh-My-Zsh? (Да[Y], Нет[N]) ' OMZP
+if [[ $OMZP =~ ^[Yy]$ ]]; then
+    echo -e "$CNT - установка zsh-autocomplete!"
+    git clone https://github.com/marlonrichert/zsh-autocomplete.git  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autocomplete
+    echo -e "$CNT - установка zsh-autosuggestions!"
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    echo -e "$CNT - установка zsh-syntax-highlighting!"
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+fi
+
+
+### Установка BetterDiscord ###
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите использовать BetterDiscord? (Да[Y], Нет[N]) ' BTD
+if [[ $BTD =~ ^[Yy]$ ]]; then
+    betterdiscordctl -D /opt/BetterDiscord install
+fi
+
+### Скрипт завершён ###
+echo -e "$CNT - Скрипт был завершен!"
+
+read -rep $'[\e[1;33mВОПРОС\e[0m] - Хотите запустить Hyprland прямо сейчас? (Да[Y], Нет[N]) ' HYP
+if [[ $HYP =~ ^[Yy]$ ]]; then
+    exec sudo systemctl start sddm &>> $INSTLOG
+else
+    exit
+fi

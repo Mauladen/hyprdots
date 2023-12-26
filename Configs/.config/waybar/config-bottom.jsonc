@@ -1,0 +1,75 @@
+{
+    "layer": "top",
+    "position": "bottom",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 25,
+    "modules-left": [
+        "custom/launch_wofi",
+        "custom/launch_firefox",
+        "custom/launch_kitty",
+        "custom/launch_thunar",
+        "custom/launch_vscode",
+        "custom/launch_webstorm"
+    ],
+    "modules-center": ["wlr/taskbar"],
+    "modules-right": ["custom/weather"],
+
+    "custom/weather": {
+        "tooltip" : true,
+        "format" : "{}",
+        "interval" : 30,
+        "exec" : "~/.config/waybar/scripts/waybar-wttr.py",
+        "return-type" : "json"
+    },
+
+    "custom/launch_firefox": {
+        "format": "",
+        "on-click": "firefox",
+        "tooltip": false
+    },
+
+    "custom/launch_thunar": {
+        "format": "",
+        "on-click": "exec thunar",
+        "tooltip": false
+    },
+
+    "custom/launch_kitty": {
+        "format": "",
+        "on-click": "exec kitty",
+        "tooltip": false
+    },
+
+    "custom/launch_vscode": {
+        "format": "󰨞",
+        "on-click": "code",
+        "tooltip": false
+    },
+
+    "custom/launch_webstorm": {
+        "format": "",
+        "on-click": "webstorm",
+        "tooltip": false
+    },
+    
+    "custom/launch_wofi": {
+        "format": "󱗼",
+        "on-click": "sh -c '(sleep 0.5s; pkill wofi || wofi -c ~/.config/wofi/config-lmenu)' & disown",
+        "tooltip": false
+    },
+
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 24,
+        "all-outputs": true,
+        "tooltip-format": "{name} - {title}",
+        "on-click": "activate",
+        "on-click-middle": "close",
+        "ignore-list": [
+            "wofi"
+        ]
+    }
+}
