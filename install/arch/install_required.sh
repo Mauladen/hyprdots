@@ -7,7 +7,6 @@ installer_packages=(
     "unzip"
     "gum"
     "rsync"
-    "figlet"
     "git"
 )
 
