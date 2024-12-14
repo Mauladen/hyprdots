@@ -1,152 +1,149 @@
 {
-    "layer": "top",
-    "position": "top",
-    "mod": "dock",
-    "exclusive": true,
-    "passthrough": false,
-    "gtk-layer-shell": true,
-    "height": 20,
-    "modules-left": [
-        "custom/power_btn",
-        "custom/lock_screen",
-        "hyprland/workspaces"
-    ],
-    "modules-center": [
-        "idle_inhibitor",
-        "clock",
-        "custom/updates"
-    ],
-    "modules-right": [
-        "tray",
-        "cpu",
-        "temperature",
-        "pulseaudio",
-        "pulseaudio#microphone",
-        "hyprland/language",
-        "custom/restart_waybar"
-    ],
+  "layer": "top",
+  "position": "top",
+  "mod": "dock",
+  "exclusive": true,
+  "passthrough": false,
+  "gtk-layer-shell": true,
+  "height": 20,
+  "modules-left": [
+      "custom/powermenu",
+      "custom/menu",
+      "hyprland/workspaces"
+  ],
+  "modules-center": [
+      "idle_inhibitor",
+      "clock",
+      "custom/updates"
+  ],
+  "modules-right": [
+      "tray",
+      "cpu",
+      "temperature",
+      "pulseaudio",
+      "pulseaudio#microphone",
+      "hyprland/language",
+      "custom/reload_configs"
+  ],
 
-    "temperature": {
-        "thermal-zone": 1,
-        "format": "",
-        "format-alt-click": "click-right",
-        "format-alt": " {temperatureC}°C",
-        "critical-threshold": 70,
-        "format-critical": " {temperatureC}°C",
-        "on-click": "kitty --start-as=fullscreen --title btop sh -c 'btop'"
-    },
+  "temperature": {
+      "thermal-zone": 1,
+      "format": "",
+      "format-alt-click": "click-right",
+      "format-alt": " {temperatureC}°C",
+      "critical-threshold": 70,
+      "format-critical": " {temperatureC}°C"
+  },
 
-    "clock": {
-        "format": "{:%H:%M}",
-        "tooltip-format": "{: %A, %e %B %Y}"
-    },
+  "clock": {
+      "format": "{:%H:%M}",
+      "tooltip-format": "{: %A, %e %B %Y}"
+  },
 
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "󰛐",
-            "deactivated": "󰛑"
-        },
-        "tooltip": false
-    },
+  "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+          "activated": "󰛐",
+          "deactivated": "󰛑"
+      },
+      "tooltip": false,
+      "on-click-right": "hyprlock"
+  },
 
-    "hyprland/language": {
-        "format": " {}",
-        "format-en": "English",
-        "format-ru": "Русский",
-        "keyboard-name": "royuan-akko-multi-modes-keyboard-b",
-        "on-click": "~/.config/waybar/scripts/switch-keyboard"
-    },
+  "hyprland/language": {
+      "format": " {}",
+      "format-en": "English",
+      "format-ru": "Русский",
+      "keyboard-name": "royuan-akko-multi-modes-keyboard-b",
+      "on-click": "hyprctl switchxkblayout royuan-akko-multi-modes-keyboard-b next"
+  },
 
-    "custom/power_btn": {
-        "format": "",
-        "on-click": "sh -c '(sleep 0.5s; wlogout --protocol layer-shell)' & disown",
-        "tooltip": false
-    },
+  "custom/powermenu": {
+      "format": "",
+      "on-click": "wlogout --protocol layer-shell",
+		  "escape": true,
+		  "tooltip": false
+  },
 
-    "custom/lock_screen": {
-        "format": "",
-        "on-click": "sh -c '(sleep 0.5s; hyprlock)' & disown",
-        "tooltip": false
-    },
+  "custom/menu": {
+		"format": "󱗼",
+		"on-click": "sh ~/.config/rofi/launcher/launcher.sh",
+		"escape": true,
+		"tooltip": false
+	},
 
-    "hyprland/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "on-click": "activate",
-        "persistent_workspaces": {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": [],
-            "7": [],
-            "8": [],
-            "9": [],
-            "10": []
-        }
-    },
+  "hyprland/workspaces": {
+      "disable-scroll": true,
+      "all-outputs": true,
+      "on-click": "activate",
+      "persistent_workspaces": {
+          "1": [],
+          "2": [],
+          "3": [],
+          "4": [],
+          "5": []
+      }
+  },
 
-    "cpu": {
-        "interval": 10,
-        "format": "",
-        "max-length": 10,
-        "format-alt-click": "click-right",
-        "format-alt": " {usage}%",
-        "on-click": "kitty --start-as=fullscreen --title btop sh -c 'btop'"
-    },
+  "cpu": {
+      "interval": 10,
+      "format": "",
+      "max-length": 10,
+      "format-alt-click": "click-right",
+      "format-alt": " {usage}%",
+      "on-click": "foot -F -T btop sh -c 'btop'"
+  },
 
-    "pulseaudio": {
-        "format": "{icon}",
-        "format-muted": "",
-        "on-click": "~/.config/waybar/scripts/volume --toggle",
-        "on-click-right": "pavucontrol",
-        "on-scroll-up": "~/.config/waybar/scripts/volume --inc",
-        "on-scroll-down": "~/.config/waybar/scripts/volume --dec",
-        "scroll-step": 5,
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "tooltip": true,
-        "tooltip-format": "{icon} {volume}%"
-    },
+  "pulseaudio": {
+      "format": "{icon}",
+      "format-muted": "",
+      "on-click": "sh ~/.config/waybar/scripts/volume.sh --toggle",
+      "on-click-right": "pavucontrol",
+      "on-scroll-up": "sh ~/.config/waybar/scripts/volume.sh --inc",
+      "on-scroll-down": "sh ~/.config/waybar/scripts/volume.sh --dec",
+      "scroll-step": 5,
+      "format-icons": {
+          "headphone": "",
+          "hands-free": "",
+          "headset": "",
+          "phone": "",
+          "portable": "",
+          "car": "",
+          "default": ["", "", ""]
+      },
+      "tooltip": true,
+      "tooltip-format": "{icon} {volume}%"
+  },
 
-    "pulseaudio#microphone": {
-        "format": "{format_source}",
-        "format-source": "",
-        "format-source-muted": "",
-        "on-click": "~/.config/waybar/scripts/volume --toggle-mic",
-        "on-click-right": "pavucontrol",
-        "on-scroll-up": "~/.config/waybar/scripts/volume --mic-inc",
-        "on-scroll-down": "~/.config/waybar/scripts/volume --mic-dec",
-        "scroll-step": 5,
-        "tooltip": true,
-        "tooltip-format": " {volume}%"
-    },
+  "pulseaudio#microphone": {
+      "format": "{format_source}",
+      "format-source": "",
+      "format-source-muted": "",
+      "on-click": "sh ~/.config/waybar/scripts/volume.sh --toggle-mic",
+      "on-click-right": "pavucontrol",
+      "on-scroll-up": "sh ~/.config/waybar/scripts/volume.sh --mic-inc",
+      "on-scroll-down": "sh ~/.config/waybar/scripts/volume.sh --mic-dec",
+      "scroll-step": 5,
+      "tooltip": true,
+      "tooltip-format": " {volume}%"
+  },
 
-    "tray": {
-        "icon-size": 16,
-        "spacing": 10
-    },
+  "tray": {
+      "icon-size": 16,
+      "spacing": 10
+  },
 
-    "custom/updates": {
-        "format": "{}",
-        "exec": "~/.config/waybar/scripts/update-sys",
-        "on-click": "~/.config/waybar/scripts/update-sys update",
-        "interval": 300,
-        "tooltip": true
-    },
+  "custom/updates": {
+      "format": "{}",
+      "exec": "sh ~/.config/waybar/scripts/update-sys.sh",
+      "on-click": "sh ~/.config/waybar/scripts/update-sys.sh update",
+      "interval": 300,
+      "tooltip": true
+  },
 
-    "custom/restart_waybar": {
-        "format": "󰐾",
-        "on-click": "~/.config/waybar/scripts/reload-waybar",
-        "tooltip": false
-    }
+  "custom/reload_configs": {
+      "format": "󰐾",
+      "on-click": "sh ~/.config/waybar/scripts/restart-configs.sh",
+      "tooltip": false
+  }
 }

@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#  __  __                  _
-# |  \/  | _____   _____  | |_ ___
-# | |\/| |/ _ \ \ / / _ \ | __/ _ \
-# | |  | | (_) \ V /  __/ | || (_) |
-# |_|  |_|\___/ \_/ \___|  \__\___/
-#
-
 # Get the target workspace from the argument
 target_workspace=$1
 

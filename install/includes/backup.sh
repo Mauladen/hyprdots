@@ -1,56 +1,61 @@
 backup_files=(
-    ".config/alacritty"
-    ".config/dunst"
-    ".config/hypr"
-    ".config/hyprdots"
-    ".config/rofi"
-    ".config/waybar"
-    ".config/wlogout"
-    ".bashrc"
+  ".config/foot"
+  ".config/dunst"
+  ".config/hypr"
+  ".config/hyprdots"
+  ".config/rofi"
+  ".config/waybar"
+  ".config/wlogout"
+  ".zshrc"
 )
 
 echo -e "${GREEN}"
-figlet "Backup"
+cat <<"EOF"
+ ____  ____  ____  ____  ____  ____  _  _   __   ____    __ _  __   ____  _ __
+(  _ \(  __)( __ \(  __)(  _ \(  _ \/ )( \ / _\ / _  )  (  / )/  \ /    \/ )  )
+ ) __/ ) _)  (__ ( ) _)  ) __/ ) _ () __ (/    \\    \   )  ((  O )) /\ (\    \
+(__)  (____)(____/(____)(__)  (____/\_)(_/\_/\_/(_/__/  (__\_)\__/ \_)(_/(__(_/
+EOF
 echo -e "${NONE}"
-echo "The script can create a backup of you existing configurations in .config and your .bashrc"
-if gum confirm "Do you want to create a backup now" ;then
+echo "Скрипт может создать резервную копию ваших существующих конфигураций в .config и вашего .zshrc"
+if gum confirm "Хотите создать резервную копию сейчас"; then
 
-    # Create hyprdots folder
-    if [ ! -d ~/hyprdots ] ;then
-        mkdir ~/hyprdots
+  # Создаем папку hyprdots
+  if [ ! -d ~/hyprdots ]; then
+    mkdir ~/hyprdots
+  fi
+
+  # Получаем текущую метку времени
+  datets=$(date '+%Y%m%d%H%M%S')
+
+  # Создаем папку для архива
+  if [ ! -d ~/hyprdots/archive ]; then
+    mkdir ~/hyprdots/archive
+  fi
+
+  # Создаем папку для резервных копий
+  if [ ! -d ~/hyprdots/backup ]; then
+    mkdir ~/hyprdots/backup
+  else
+    mkdir ~/hyprdots/archive/$datets
+    cp -r ~/hyprdots/backup/. ~/hyprdots/archive/$datets/
+  fi
+
+  for df in "${backup_files[@]}"; do
+    if [ -d ~/$df ]; then
+      echo ":: Резервное копирование $df"
+      mkdir -p ~/hyprdots/backup/$df
+      cp -r ~/$df ~/hyprdots/backup/$df
     fi
-
-    # Get current timestamp
-    datets=$(date '+%Y%m%d%H%M%S')
-
-    # Create backup folder
-    if [ ! -d ~/hyprdots/archive ] ;then
-        mkdir ~/hyprdots/archive
+    if [ -f ~/$df ] && [ ! -L "${df}" ]; then
+      echo ":: Резервное копирование $df"
+      cp ~/$df ~/hyprdots/backup/$df
     fi
+  done
 
-    # Create backup folder
-    if [ ! -d ~/hyprdots/backup ] ;then
-        mkdir ~/hyprdots/backup
-    else
-        mkdir ~/hyprdots/archive/$datets
-        cp -r ~/hyprdots/backup/. ~/hyprdots/archive/$datets/
-    fi
-
-    for df in "${backup_files[@]}"
-    do
-        if [ -d ~/$df ] ;then
-            echo ":: Backup of $df"
-            mkdir -p ~/hyprdots/backup/$df
-            cp -r ~/$df ~/hyprdots/backup/$df
-        fi
-        if [ -f ~/$df ] && [ ! -L "${df}" ] ;then
-            echo ":: Backup of $df"
-            cp ~/$df ~/hyprdots/backup/$df
-        fi
-    done
 elif [ $? -eq 130 ]; then
-    echo ":: Installation canceled"
-    exit 130
+  echo ":: Установка отменена"
+  exit 130
 else
-    echo ":: Backup skipped"
+  echo ":: Резервное копирование пропущено"
 fi
