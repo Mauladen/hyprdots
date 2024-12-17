@@ -63,7 +63,6 @@ packages=(
 
 packages_aur=(
   visual-studio-code-bin
-  catppuccin-gtk-theme-mocha
   bibata-cursor-theme
   wlogout
   oh-my-zsh-git

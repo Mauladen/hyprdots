@@ -2,7 +2,7 @@
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
 include "/home/mauladen/.gtkrc-2.0.mine"
-gtk-theme-name="catppuccin-mocha-rosewater-standard+default"
+gtk-theme-name="Catppuccin-Purple-Dark"
 gtk-icon-theme-name="Tela-circle-dracula-dark"
 gtk-font-name="JetBrains Mono 11"
 gtk-cursor-theme-name="Bibata-Modern-Ice"
