@@ -54,8 +54,8 @@
       "format": " {}",
       "format-en": "English",
       "format-ru": "Русский",
-      "keyboard-name": "royuan-akko-multi-modes-keyboard-b",
-      "on-click": "hyprctl switchxkblayout royuan-akko-multi-modes-keyboard-b next"
+      "keyboard-name": "rdr-rainy-75",
+      "on-click": "hyprctl switchxkblayout rdr-rainy-75 next"
   },
 
   "custom/powermenu": {
