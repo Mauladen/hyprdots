@@ -67,6 +67,8 @@ packages_aur=(
   bibata-cursor-theme
   wlogout
   fnm
+  vkteams-bin
+  hunspell-ru
 )
 
 _installPackages "${packages[@]}";
