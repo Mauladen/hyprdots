@@ -5,9 +5,6 @@
 packages=(
     qt5-wayland
     qt6-wayland
-    qt5-svg
-    qt5-quickcontrols2
-    qt5-graphicaleffects
     polkit-gnome
     gtk4
     wl-clipboard
@@ -28,11 +25,11 @@ packages=(
     hypridle
     waybar
     rofi-wayland
+    hyprlock
     foot
     mako
     xdg-desktop-portal-hyprland
     swww
-    hyprlock
     fastfetch
     swappy
     grim

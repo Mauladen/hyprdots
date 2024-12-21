@@ -1,3 +1,10 @@
+packages=(
+  sddm
+  qt5-graphicaleffects
+  qt5-quickcontrols2
+  qt5-svg
+)
+
 echo -e "${GREEN}"
 cat <<"EOF"
  ____  ____  ____  _  _
@@ -8,7 +15,7 @@ EOF
 echo -e "${NONE}"
 echo
 if gum confirm "Хотите настроить sddm?"; then
-_installPackages "sddm";
+_installPackages "${packages[@]}";
 sudo systemctl enable sddm
 sudo cp -R install/sddm/sdt /usr/share/sddm/themes/
 sudo chown -R $USER:$USER /usr/share/sddm/themes/sdt
