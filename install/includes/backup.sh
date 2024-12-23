@@ -6,7 +6,7 @@ backup_files=(
   ".config/hypr"
   ".config/hyprdots"
   ".config/Kvantum"
-  ".config/mako"
+  ".config/swaync"
   ".config/nwg-dock-hyprland"
   ".config/nwg-look"
   ".config/rofi"

@@ -27,7 +27,7 @@ packages=(
     rofi-wayland
     hyprlock
     foot
-    mako
+    swaync
     xdg-desktop-portal-hyprland
     swww
     fastfetch
