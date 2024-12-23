@@ -57,6 +57,7 @@ packages=(
     eza
     zoxide
     fzf
+    dex
 )
 
 packages_aur=(
