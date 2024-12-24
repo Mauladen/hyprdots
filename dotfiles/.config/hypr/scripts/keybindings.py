@@ -29,7 +29,7 @@ bindmap = ""
 for bind in json.loads(subprocess.check_output(["hyprctl", "binds", "-j"])):
     bindmap += f'<b>{modmask_to_key(bind['modmask'])}{bind['key']}</b> <i>{bind["description"]}</i> <span color="gray">{bind["dispatcher"]}</span> <span color="lightgray">{bind["arg"]}</span>\n'
 
-choice = subprocess.check_output(["rofi", "-dmenu", "-i", "-markup-rows", "-p", "Сочетания клавиш:"], input=bindmap, text=True)
+choice = subprocess.check_output(["rofi", "-dmenu", "-i", "-markup-rows", "-p", "Сочетания клавиш:", "-config", "~/.config/rofi/keybindings.rasi"], input=bindmap, text=True)
 
 pattern = r'<span color="gray">(.*?)</span> <span color="lightgray">(.*?)</span>'
 match = re.search(pattern, choice)

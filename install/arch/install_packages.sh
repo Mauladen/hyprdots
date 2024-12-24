@@ -58,6 +58,7 @@ packages=(
     zoxide
     fzf
     dex
+    wf-recorder
 )
 
 packages_aur=(
