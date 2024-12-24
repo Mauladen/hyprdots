@@ -63,7 +63,7 @@
   },
   "custom/powermenu": {
     "format": "",
-    "on-click": "wlogout --protocol layer-shell",
+    "on-click": "wlogout -b 6 -c 0 -r 0 -m 0 --protocol layer-shell",
     "escape": true,
     "tooltip": false
   },
