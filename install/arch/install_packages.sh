@@ -5,7 +5,6 @@
 packages=(
     qt5-wayland
     qt6-wayland
-    polkit-gnome
     gtk4
     wl-clipboard
     cliphist
@@ -64,6 +63,7 @@ packages=(
 packages_aur=(
   visual-studio-code-bin
   bibata-cursor-theme
+  hyprpolkitagent-bin
   wlogout
   fnm
   vkteams-bin
